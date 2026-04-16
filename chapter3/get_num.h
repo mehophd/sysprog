@@ -1,6 +1,6 @@
 #ifndef GET_NUM_H
 #define GET_NUM_H
-#define GNNONNEG 01     // Значение должно быть >= 0
+#define GN_NONNEG 01     // Значение должно быть >= 0
 #define GN_GT_0 02      // Значение должно быть > 0
 
                         // по умолчанию целые числа являются десятичными

@@ -14,6 +14,17 @@ static void gnFail(const char *fname, const char *msg, const char *arg, const ch
         fprintf(stderr, " offending text: %s\n", arg);
     exit(EXIT_FAILURE);
 }
+/*
+const char *fname — имя функции, в которой произошла ошибка. 
+Обычно это строка "getInt" или "getLong". Нужно, чтобы пользователь понимал, на каком этапе возникла проблема.
+
+const char *msg — текст самой ошибки. Например, "value must be > 0" или "invalid number".
+
+const char *arg — сама строка, которую пытались преобразовать (например, "-5" или "abc").
+
+const char *name — логическое имя аргумента, которое передал программист. 
+Например, "buffer size" или "timeout". Помогает сделать сообщение понятным для человека.
+*/
 
 static long getNum(const char *fname, const char *arg, int flags, const char *name) {
     long res;
@@ -34,7 +45,7 @@ static long getNum(const char *fname, const char *arg, int flags, const char *na
         gnFail(fname, "nonnumeric characters", arg, name);
     if ((flags & GN_NONNEG) && res < 0)
         gnFail(fname, "negative value not allowed", arg, name);
-    if ((flags * GN_GT_0) && res <= 0)
+    if ((flags & GN_GT_0) && res <= 0)
         gnFail(fname, "value must be > 0", arg, name);
     return res;
 }

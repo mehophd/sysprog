@@ -8,17 +8,26 @@
 
 int main(int argc, char *argv[]) {
     int inputFd, outputFd, openFlags;
+    int forceFlag = 0;
     mode_t filePerms;
     ssize_t numRead;
     char buf[BUF_SIZE];
 
-    if (argc != 3 || strcmp(argv[1], "--help") == 0)
-        usageErr("%s old-file new-file\n", argv[0]);
+    if (argc < 3 || argc > 4 || strcmp(argv[1], "--help") == 0)
+        usageErr("%s old-file new-file [--force]\n", argv[0]);
     /* Открытие файлов ввода и вывода */
     inputFd = open(argv[1], O_RDONLY);
     if (inputFd == -1)
         errExit("opening file %s", argv[1]);
-    openFlags = O_CREAT | O_WRONLY | O_TRUNC;
+    
+    if (argc == 4 && strcmp(argv[3], "--force") == 0)
+        forceFlag = 1;
+
+    if (forceFlag) {
+        openFlags = O_CREAT | O_WRONLY | O_TRUNC;
+    } else {
+        openFlags = O_CREAT | O_WRONLY | O_EXCL;
+    }
     filePerms = S_IRUSR | S_IWUSR | S_IRGRP | S_IWGRP |
                 S_IROTH | S_IWOTH;
     /*
